@@ -33,17 +33,19 @@ st.markdown("""
        ============================================= */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
     
-    /* OpenAI API Key 입력 박스 전체 숨기기 */
-    div[data-testid="stTextInput"] label p:contains("OpenAI API Key"),
-    div[data-testid="stTextInput"] label p:contains("YouTube API Key") {
+    div[data-testid="column"]:has(input[type="password"][aria-label='OpenAI API Key']) {
         display: none !important;
     }
     
-    /* 레이블 기반으로 전체 wrapper 숨기기 */
-    div[data-testid="stTextInput"]:has(label p:contains("OpenAI API Key")) {
+    /* 2. YouTube Key가 들어 있는 column 전체 숨김 */
+    div[data-testid="column"]:has(input[type="password"][aria-label='YouTube API Key']) {
         display: none !important;
     }
-    div[data-testid="stTextInput"]:has(label p:contains("YouTube API Key")) {
+    div[data-testid="column"]:has(input[placeholder='OpenAI API Key']) {
+    display: none !important;
+    }
+    
+    div[data-testid="column"]:has(input[placeholder='YouTube API Key']) {
         display: none !important;
     }
     
@@ -2057,4 +2059,5 @@ elif st.session_state.current_tab == 'Analyzation':
     # 전체 컨테이너 닫기
 
     st.markdown('</div>', unsafe_allow_html=True)
+
 

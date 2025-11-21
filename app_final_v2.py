@@ -1513,14 +1513,15 @@ elif st.session_state.current_tab == 'Analyzation':
             uploaded_files = st.file_uploader("이미지 파일 업로드", type=['png', 'jpg', 'jpeg'], accept_multiple_files=True)
         
         st.markdown("---")
+
+        # API 키 입력 UI 삭제 → 대신 내부 값 바로 세션에 넣기
+        openai_key = DEFAULT_OPENAI_KEY
+        youtube_key = DEFAULT_YOUTUBE_KEY
         
-        # API 키 입력 (하단 배치)
-        col1, col2 = st.columns(2)
-        with col1:
-            openai_key = st.text_input("OpenAI API Key", value=DEFAULT_OPENAI_KEY, type="password", help="GPT-4 Vision API를 사용합니다")
-        with col2:
-            youtube_key = st.text_input("YouTube API Key", value=DEFAULT_YOUTUBE_KEY, type="password", help="처방 영상 검색에 사용됩니다")
-        
+        # 세션 저장
+        st.session_state.openai_key = openai_key
+        st.session_state.youtube_key = youtube_key
+
         _, btn_col, _ = st.columns([3, 2, 3])
         
         # -------------------------------------------------------
@@ -1534,8 +1535,8 @@ elif st.session_state.current_tab == 'Analyzation':
                 
                 if not (has_text or has_image):
                     st.error("⚠️ 분석할 데이터가 없습니다! 텍스트를 붙여넣거나 이미지를 업로드해주세요.")
-                elif not openai_key or not youtube_key:
-                    st.error("⚠️ API Key를 모두 입력해주세요!")
+                #elif not openai_key or not youtube_key:
+                    #st.error("⚠️ API Key를 모두 입력해주세요!")
                 else:
                     # API 키 세션 저장
                     st.session_state.openai_key = openai_key
@@ -2052,6 +2053,7 @@ elif st.session_state.current_tab == 'Analyzation':
     # 전체 컨테이너 닫기
 
     st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 

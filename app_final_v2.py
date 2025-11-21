@@ -1066,7 +1066,9 @@ if 'current_tab' not in st.session_state: st.session_state.current_tab = 'Introd
 if 'step' not in st.session_state: st.session_state.step = 1
 if 'survey_complete' not in st.session_state: st.session_state.survey_complete = False
 if 'user_context' not in st.session_state: st.session_state.user_context = {}
-
+if 'openai_key' not in st.session_state: st.session_state.openai_key = DEFAULT_OPENAI_KEY
+if 'youtube_key' not in st.session_state: st.session_state.youtube_key = DEFAULT_YOUTUBE_KEY
+    
 # --- 6. 사이드바 네비게이션 ---
 with st.sidebar:
     st.markdown("# YouTube Diet")
@@ -2038,4 +2040,5 @@ elif st.session_state.current_tab == 'Analyzation':
                 st.rerun()
     
     # 전체 컨테이너 닫기
+
     st.markdown('</div>', unsafe_allow_html=True)

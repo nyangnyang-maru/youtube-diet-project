@@ -13,8 +13,8 @@ from PIL import Image
 import io
 
 # --- 0. API KEY 설정 ---
-DEFAULT_OPENAI_KEY = "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"
-DEFAULT_YOUTUBE_KEY = "AIzaSyD-XCJTmUF8ytY1eaUw3XSztSfY3eKtjHQ"
+DEFAULT_OPENAI_KEY = st.secrets.get("OPENAI_API_KEY", "")
+DEFAULT_YOUTUBE_KEY = st.secrets.get("YOUTUBE_API_KEY", "")
 
 # --- 1. 페이지 설정 ---
 st.set_page_config(
@@ -1505,31 +1505,29 @@ elif st.session_state.current_tab == 'Analyzation':
         st.markdown("---")
         
         # API 키 입력 (하단 배치)
-        col1, col2 = st.columns(2)
-        with col1:
-            openai_key = st.text_input("OpenAI API Key", value=DEFAULT_OPENAI_KEY, type="password", help="GPT-4 Vision API를 사용합니다")
-        with col2:
-            youtube_key = st.text_input("YouTube API Key", value=DEFAULT_YOUTUBE_KEY, type="password", help="처방 영상 검색에 사용됩니다")
-        
-        _, btn_col, _ = st.columns([3, 2, 3])
+        st.info("🔒 API 키는 서버 내부에서 안전하게 처리됩니다.")
         
         # -------------------------------------------------------
         # [분석 시작 버튼] 로직 통합
         # -------------------------------------------------------
+        _, btn_col, _ = st.columns([3, 2, 3])
         with btn_col:
             if st.button("AI 분석 시작 ➡️", type="primary", use_container_width=True):
-                # 1. 입력 데이터 확인
                 has_text = len(user_text) > 50
                 has_image = uploaded_files is not None and len(uploaded_files) > 0
                 
                 if not (has_text or has_image):
                     st.error("⚠️ 분석할 데이터가 없습니다! 텍스트를 붙여넣거나 이미지를 업로드해주세요.")
-                elif not openai_key or not youtube_key:
-                    st.error("⚠️ API Key를 모두 입력해주세요!")
                 else:
-                    # API 키 세션 저장
-                    st.session_state.openai_key = openai_key
-                    st.session_state.youtube_key = youtube_key
+                    # API 키 확인 (세션이나 디폴트 값 확인)
+                    if not st.session_state.openai_key and DEFAULT_OPENAI_KEY:
+                        st.session_state.openai_key = DEFAULT_OPENAI_KEY
+                    if not st.session_state.youtube_key and DEFAULT_YOUTUBE_KEY:
+                        st.session_state.youtube_key = DEFAULT_YOUTUBE_KEY
+                    
+                    if not st.session_state.openai_key:
+                        st.error("OpenAI API Key가 설정되지 않았습니다.")
+                        st.stop()
                     
                     # 데이터 처리 시작
                     final_titles = []
@@ -1541,7 +1539,7 @@ elif st.session_state.current_tab == 'Analyzation':
                         progress_msg.info("📜 텍스트 구조를 분석하여 제목만 추출하는 중... (쇼츠 구간 식별)")
                         
                         try:
-                            client = OpenAI(api_key=openai_key)
+                            client = OpenAI(api_key=st.session_state.openai_key)
                             cleaning_prompt = """
                             You are a YouTube Page Text Cleaner.
                             The user has pasted the raw text dump from YouTube Home/History.

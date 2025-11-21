@@ -11,10 +11,11 @@ import math
 import os
 from PIL import Image
 import io
+import streamlit as st
 
 # --- 0. API KEY 설정 ---
-DEFAULT_OPENAI_KEY = "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"
-DEFAULT_YOUTUBE_KEY = "AIzaSyD-XCJTmUF8ytY1eaUw3XSztSfY3eKtjHQ"
+DEFAULT_OPENAI_KEY = st.secrets.get("OPENAI_API_KEY", "")
+DEFAULT_YOUTUBE_KEY = st.secrets.get("YOUTUBE_API_KEY", "")
 
 # --- 1. 페이지 설정 ---
 st.set_page_config(
@@ -2040,4 +2041,5 @@ elif st.session_state.current_tab == 'Analyzation':
                 st.rerun()
     
     # 전체 컨테이너 닫기
+
     st.markdown('</div>', unsafe_allow_html=True)
